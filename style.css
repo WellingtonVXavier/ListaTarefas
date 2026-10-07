@@ -1,0 +1,387 @@
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --bg: #0f172a;
+    --bg-card: #1e293b;
+    --text: #f1f5f9;
+    --muted: #94a3b8;
+    --accent: #38bdf8;
+    --accent-hover: #0ea5e9;
+    --danger: #f43f5e;
+    --warn: #fbbf24;
+    --ok: #34d399;
+    --radius: 14px;
+    --shadow: 0 18px 40px rgba(2, 6, 23, 0.45);
+}
+
+[v-cloak] {
+    display: none;
+}
+
+body {
+    min-height: 100vh;
+    font-family: "Segoe UI", system-ui, sans-serif;
+    background:
+        radial-gradient(circle at top left, #1d4ed8 0%, transparent 35%),
+        radial-gradient(circle at bottom right, #0ea5e9 0%, transparent 30%),
+        var(--bg);
+    color: var(--text);
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 24px;
+}
+
+.layout {
+    width: min(920px, 100%);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 260px;
+    gap: 18px;
+    align-items: start;
+}
+
+.card {
+    background: var(--bg-card);
+    border: 1px solid rgba(148, 163, 184, 0.18);
+    border-radius: 20px;
+    padding: 24px;
+    box-shadow: var(--shadow);
+}
+
+h2,
+h3 {
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    text-align: center;
+}
+
+h2 {
+    font-size: 1.55rem;
+    margin-bottom: 18px;
+}
+
+h3 {
+    font-size: 1.1rem;
+    margin-bottom: 8px;
+}
+
+.form-item,
+.input-edicao,
+.form-item input {
+    font-size: 1rem;
+}
+
+.form-item {
+    display: grid;
+    grid-template-columns: 1fr 120px auto;
+    gap: 8px;
+    margin-bottom: 18px;
+}
+
+.form-item input,
+.input-edicao {
+    min-width: 0;
+    padding: 12px 14px;
+    border: 1px solid rgba(148, 163, 184, 0.28);
+    border-radius: var(--radius);
+    background: #0f172a;
+    color: var(--text);
+    outline: none;
+}
+
+.form-item input::placeholder,
+.input-edicao::placeholder {
+    color: var(--muted);
+}
+
+.form-item input:focus,
+.input-edicao:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.25);
+}
+
+.btn-add {
+    padding: 12px 16px;
+    border: none;
+    border-radius: var(--radius);
+    background: var(--accent);
+    color: #0f172a;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.btn-add:hover {
+    background: var(--accent-hover);
+}
+
+.vazio {
+    text-align: center;
+    color: var(--muted);
+    padding: 12px 0;
+}
+
+.lista-compras {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.item {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 12px;
+    background: #0f172a;
+    border: 1px solid rgba(148, 163, 184, 0.18);
+    border-radius: 12px;
+    padding: 12px;
+}
+
+.item.marcado {
+    border-color: rgba(56, 189, 248, 0.45);
+}
+
+.item.inativa {
+    opacity: 0.55;
+}
+
+.check {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 22px;
+    height: 22px;
+    cursor: pointer;
+}
+
+.check input {
+    position: absolute;
+    opacity: 0;
+    inset: 0;
+    cursor: pointer;
+}
+
+.check-marca {
+    width: 22px;
+    height: 22px;
+    border: 2px solid var(--muted);
+    border-radius: 6px;
+    background: #020617;
+}
+
+.check input:checked + .check-marca {
+    background: var(--ok);
+    border-color: var(--ok);
+}
+
+.check input:checked + .check-marca::after {
+    content: "";
+    display: block;
+    width: 6px;
+    height: 11px;
+    margin: 2px auto 0;
+    border: solid #0f172a;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+.check input:disabled {
+    cursor: not-allowed;
+}
+
+.item-conteudo {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.item-nome {
+    word-break: break-word;
+}
+
+.item.inativa .item-nome {
+    text-decoration: line-through;
+    color: var(--muted);
+}
+
+.item-preco {
+    color: var(--accent);
+    font-weight: 700;
+}
+
+.acoes {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 6px;
+}
+
+.acoes button {
+    border: none;
+    border-radius: 10px;
+    padding: 8px 10px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.btn-editar,
+.btn-salvar {
+    background: var(--accent);
+    color: #0f172a;
+}
+
+.btn-inativar,
+.btn-cancelar {
+    background: var(--warn);
+    color: #0f172a;
+}
+
+.btn-excluir {
+    background: var(--danger);
+    color: #fff;
+}
+
+.item.inativa .btn-inativar {
+    background: var(--ok);
+}
+
+.totais {
+    margin-top: 16px;
+    display: grid;
+    gap: 8px;
+    padding-top: 14px;
+    border-top: 1px solid rgba(148, 163, 184, 0.18);
+}
+
+.totais div {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    color: var(--muted);
+}
+
+.totais strong {
+    color: var(--text);
+}
+
+.total-pagar {
+    padding-top: 6px;
+    font-size: 1.05rem;
+}
+
+.total-pagar span,
+.total-pagar strong {
+    color: var(--ok);
+}
+
+.calculadora {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.calc-ajuda,
+.extra-info {
+    color: var(--muted);
+    font-size: 0.85rem;
+    text-align: center;
+}
+
+.calc-visor {
+    background: #020617;
+    border-radius: 12px;
+    padding: 14px 12px;
+    text-align: right;
+    font-size: 1.4rem;
+    font-weight: 700;
+    min-height: 52px;
+    word-break: break-all;
+}
+
+.calc-teclado {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+}
+
+.calc-teclado button {
+    border: none;
+    border-radius: 10px;
+    padding: 12px 0;
+    background: #0f172a;
+    color: var(--text);
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.calc-teclado .calc-zero {
+    grid-column: span 2;
+}
+
+.calc-op {
+    color: var(--accent) !important;
+}
+
+.calc-acao {
+    color: var(--warn) !important;
+}
+
+.calc-igual {
+    grid-row: span 2;
+    background: var(--accent) !important;
+    color: #0f172a !important;
+}
+
+.btn-extra,
+.btn-limpar-extra {
+    border: none;
+    border-radius: 12px;
+    padding: 12px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.btn-extra {
+    background: var(--ok);
+    color: #0f172a;
+}
+
+.btn-limpar-extra {
+    background: transparent;
+    color: var(--muted);
+    text-decoration: underline;
+}
+
+@media (max-width: 800px) {
+    .layout {
+        grid-template-columns: 1fr;
+    }
+
+    .form-item {
+        grid-template-columns: 1fr;
+    }
+
+    .item {
+        grid-template-columns: auto 1fr;
+    }
+
+    .acoes {
+        grid-column: 1 / -1;
+        justify-content: stretch;
+    }
+
+    .acoes button {
+        flex: 1;
+    }
+}

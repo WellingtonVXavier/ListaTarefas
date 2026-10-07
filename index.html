@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Compras</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue@3.5.22/dist/vue.global.prod.js"></script>
+</head>
+<body>
+    <div id="app" class="layout" v-cloak>
+        <section class="card">
+            <h2>Lista de Compras</h2>
+
+            <form class="form-item" @submit.prevent="adicionarItem">
+                <input
+                    v-model="novoNome"
+                    type="text"
+                    placeholder="Item (ex.: pão, leite...)"
+                    autocomplete="off"
+                >
+                <input
+                    v-model="novoValor"
+                    type="text"
+                    inputmode="decimal"
+                    placeholder="Valor R$"
+                    autocomplete="off"
+                >
+                <button type="submit" class="btn-add">Adicionar</button>
+            </form>
+
+            <p v-if="!itens.length" class="vazio">Nenhum item ainda. Adicione o primeiro!</p>
+
+            <ul v-else class="lista-compras">
+                <li
+                    v-for="item in itens"
+                    :key="item.id"
+                    class="item"
+                    :class="{ inativa: !item.ativa, marcado: item.marcado }"
+                >
+                    <label class="check">
+                        <input
+                            type="checkbox"
+                            v-model="item.marcado"
+                            :disabled="!item.ativa || item.editando"
+                        >
+                        <span class="check-marca"></span>
+                    </label>
+
+                    <div class="item-conteudo">
+                        <template v-if="item.editando">
+                            <input
+                                v-model="item.rascunhoNome"
+                                type="text"
+                                class="input-edicao"
+                                @keydown.enter="salvarEdicao(item)"
+                                @keydown.esc="cancelarEdicao(item)"
+                            >
+                            <input
+                                v-model="item.rascunhoValor"
+                                type="text"
+                                inputmode="decimal"
+                                class="input-edicao"
+                                placeholder="Valor R$"
+                                @keydown.enter="salvarEdicao(item)"
+                                @keydown.esc="cancelarEdicao(item)"
+                            >
+                        </template>
+                        <template v-else>
+                            <span class="item-nome">{{ item.nome }}</span>
+                            <span class="item-preco">{{ formatarMoeda(item.centavos) }}</span>
+                        </template>
+                    </div>
+
+                    <div class="acoes">
+                        <template v-if="item.editando">
+                            <button type="button" class="btn-salvar" @click="salvarEdicao(item)">Salvar</button>
+                            <button type="button" class="btn-cancelar" @click="cancelarEdicao(item)">Cancelar</button>
+                        </template>
+                        <template v-else>
+                            <button type="button" class="btn-editar" @click="iniciarEdicao(item)">Editar</button>
+                            <button type="button" class="btn-inativar" @click="alternarAtiva(item)">
+                                {{ item.ativa ? 'Inativar' : 'Ativar' }}
+                            </button>
+                            <button type="button" class="btn-excluir" @click="excluirItem(item)">Excluir</button>
+                        </template>
+                    </div>
+                </li>
+            </ul>
+
+            <div class="totais">
+                <div>
+                    <span>Total da lista</span>
+                    <strong>{{ formatarMoeda(somaLista) }}</strong>
+                </div>
+                <div>
+                    <span>Soma dos marcados</span>
+                    <strong>{{ formatarMoeda(somaMarcados) }}</strong>
+                </div>
+                <div class="total-pagar">
+                    <span>Total a pagar</span>
+                    <strong>{{ formatarMoeda(totalPagar) }}</strong>
+                </div>
+            </div>
+        </section>
+
+        <aside class="card calculadora">
+            <h3>Mini calculadora</h3>
+            <p class="calc-ajuda">Some valores extras (frete, sacola...) e some à compra.</p>
+            <div class="calc-visor">{{ calcVisor }}</div>
+            <div class="calc-teclado">
+                <button type="button" class="calc-acao" @click="limparCalc">C</button>
+                <button type="button" class="calc-acao" @click="apagarCalc">⌫</button>
+                <button type="button" class="calc-op" @click="definirOperacao('/')">÷</button>
+                <button type="button" class="calc-op" @click="definirOperacao('*')">×</button>
+
+                <button type="button" @click="teclar('7')">7</button>
+                <button type="button" @click="teclar('8')">8</button>
+                <button type="button" @click="teclar('9')">9</button>
+                <button type="button" class="calc-op" @click="definirOperacao('-')">−</button>
+
+                <button type="button" @click="teclar('4')">4</button>
+                <button type="button" @click="teclar('5')">5</button>
+                <button type="button" @click="teclar('6')">6</button>
+                <button type="button" class="calc-op" @click="definirOperacao('+')">+</button>
+
+                <button type="button" @click="teclar('1')">1</button>
+                <button type="button" @click="teclar('2')">2</button>
+                <button type="button" @click="teclar('3')">3</button>
+                <button type="button" class="calc-igual" @click="calcular">=</button>
+
+                <button type="button" class="calc-zero" @click="teclar('0')">0</button>
+                <button type="button" @click="teclar(',')">,</button>
+            </div>
+            <button type="button" class="btn-extra" @click="somarExtra">Somar à compra</button>
+            <p class="extra-info">Extra: {{ formatarMoeda(extraCentavos) }}</p>
+            <button v-if="extraCentavos" type="button" class="btn-limpar-extra" @click="extraCentavos = 0">
+                Zerar extra
+            </button>
+        </aside>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
